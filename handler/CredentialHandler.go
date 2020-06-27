@@ -10,8 +10,8 @@ import (
 
 // GenerateCredential generates credential. return error, clientId, clientSecret
 func GenerateCredential(clientStore *store.ClientStore) (string, string, error) {
-	clientId := uuid.New().String()[:8]
-	clientSecret := uuid.New().String()[:8]
+	clientId := uuid.New().String()
+	clientSecret := uuid.New().String()
 	err := clientStore.Set(clientId, &models.Client{
 		ID:     clientId,
 		Secret: clientSecret,
