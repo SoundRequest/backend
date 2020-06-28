@@ -1,26 +1,25 @@
 package handler
 
 import (
-	"database/sql"
 	"fmt"
-	"log"
 
+	"github.com/SoundRequest/OAuth2Server/structure"
+	"github.com/jinzhu/gorm"
+
+	// import mysql driver
 	_ "github.com/go-sql-driver/mysql"
 )
 
 // InitDB DataBase Connection
-func InitDB(dbtype string, connectionInfo string) (*sql.DB, error) {
-	db, err := sql.Open(dbtype, connectionInfo)
+func InitDB(dbtype string, connectionInfo string) (*gorm.DB, error) {
 
-	printVersion(db)
+	db, err := gorm.Open(dbtype, connectionInfo)
+	fmt.Println("Successed To Connect Database")
+
+	fmt.Println("Performing AutoMigrate...")
+	var models = []interface{}{&structure.Authentication{}}
+	db.AutoMigrate(models...)
+	fmt.Println("Successfully performed AutoMigrate")
+
 	return db, err
-}
-
-func printVersion(db *sql.DB) {
-	var version string
-	var err = db.QueryRow("SELECT VERSION()").Scan(&version)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Connected to :", version)
 }
