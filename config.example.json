@@ -1,0 +1,8 @@
+{
+  "Host": "YOUR_HOST",
+  "Username": "YOUR_USERNAME",
+  "Password": "YOUR_PASSWORD",
+  "Port": "YOUR_PORT",
+  "DBType": "YOUR_DB_TYPE",
+  "Schema": "YOUR_DB_SCHEMA"
+}

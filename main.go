@@ -2,8 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/SoundRequest/OAuth2Server/loader"
 
 	"github.com/SoundRequest/OAuth2Server/checker"
 	"github.com/SoundRequest/OAuth2Server/handler"
@@ -18,6 +21,21 @@ func main() {
 	/**
 	* Initializer
 	**/
+	dbConfig, err := loader.LoadConfig("./config.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	connectionInfo := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", dbConfig.Username, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Schema)
+	fmt.Println("Connection To " + connectionInfo)
+	db, err := handler.InitDB(dbConfig.DBType, connectionInfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var tempQuery string
+
+	db.QueryRow("SELECT 1").Scan(&tempQuery)
+	fmt.Println(tempQuery)
 
 	manager := manage.NewDefaultManager()
 	manager.SetAuthorizeCodeTokenCfg(manage.DefaultAuthorizeCodeTokenCfg)
