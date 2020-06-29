@@ -1,2 +1,3 @@
 go build;
-./OAuth2Server
+killall backend;
+./backend --PORT 9096 --DEBUG
