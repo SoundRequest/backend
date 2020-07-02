@@ -1,9 +1,11 @@
 package db
 
 import (
+	"fmt"
 	"math/rand"
 	"strings"
 
+	"github.com/SoundRequest/backend/helper"
 	"github.com/SoundRequest/backend/structure"
 	"github.com/jinzhu/gorm"
 )
@@ -37,8 +39,9 @@ func CreateUser(email, name, password string) error {
 	}
 	verifyCode := b.String()
 
-	passwordHash := password
-	result := DB().Create(&structure.User{Name: name, Email: email, Password: passwordHash, VerifyCode: verifyCode})
+	hashedPassword := helper.HashAndSalt([]byte(password))
+	fmt.Println(hashedPassword)
+	result := DB().Create(&structure.User{Name: name, Email: email, Password: hashedPassword, VerifyCode: verifyCode})
 	if result.Error != nil {
 		return result.Error
 	}
