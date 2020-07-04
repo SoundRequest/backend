@@ -15,18 +15,27 @@ var chars []rune = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
 	"0123456789")
 
 // FindUserByID controller
-func FindUserByID(id string) (*structure.User, error) {
-	return &structure.User{}, nil
+func FindUserByID(id int) (*structure.User, error) {
+	data := &structure.User{}
+	result := DB().Where("id = ?", id).First(&data)
+	if result.Error == gorm.ErrRecordNotFound {
+		return nil, ErrUserNotFound
+	} else if result.Error != nil {
+		return nil, result.Error
+	}
+	return data, nil
 }
 
-// FindUserByEmail controller
-func FindUserByEmail(email string) (*structure.User, error) {
-	return &structure.User{}, nil
-}
-
-// FindUserByName controller
-func FindUserByName(name string) (*structure.User, error) {
-	return &structure.User{}, nil
+// FindUser With Name Or Email
+func FindUser(name string) (*structure.User, error) {
+	data := &structure.User{}
+	result := DB().Where("name = ? OR email = ?", name, name).First(&data)
+	if result.Error == gorm.ErrRecordNotFound {
+		return nil, ErrUserNotFound
+	} else if result.Error != nil {
+		return nil, result.Error
+	}
+	return data, nil
 }
 
 // CreateUser controller

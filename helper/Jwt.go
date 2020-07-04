@@ -25,7 +25,6 @@ func GetJwtToken(id int) (string, error) {
 	if err != nil {
 		fmt.Println(err)
 		return "", fmt.Errorf("token signed Error")
-	} else {
-		return tokenString, nil
 	}
+	return tokenString, nil
 }

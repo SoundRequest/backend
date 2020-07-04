@@ -11,13 +11,41 @@ import (
 
 // SignIn controlls Sign In
 func SignIn(c *gin.Context) {
-	token, err := helper.GetJwtToken(1)
+	var body structure.SignIn
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Bad Request",
+		})
+		return
+	}
+	result, err := db.FindUser(body.Name)
+	if err == db.ErrUserNotFound {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "UserNotFound",
+		})
+		return
+	}
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Server Error",
+		})
+		return
+	}
+	if result := helper.CheckPassowrd(body.Password, result.Password); result == false {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Password NotMatch",
+		})
+		return
+	}
+
+	token, err := helper.GetJwtToken(result.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{})
 
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"token": token,
+			"token":    token,
+			"verified": result.Verified,
 		})
 	}
 }
@@ -37,19 +65,40 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	token, err := helper.GetJwtToken(1)
+	result, err := db.FindUser(body.Name)
+	if err == db.ErrUserNotFound {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "UserNotFound",
+		})
+		return
+	}
+
+	token, err := helper.GetJwtToken(result.ID)
+	if err := helper.SendVefiryMail("http://localhost:9096/auth/verify/"+result.VerifyCode, body.Email); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{})
-	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"token": token,
-		})
+		return
 	}
+	c.JSON(http.StatusOK, gin.H{
+		"token":    token,
+		"verified": false,
+	})
 }
 
 // Status of JWT TOKEN
 func Status(c *gin.Context) {
-	c.JSON(http.StatusAccepted, gin.H{"success": true})
+	id, _ := c.Get("UserId")
+	result, err := db.FindUserByID(id.(int))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Server Error",
+		})
+		return
+	}
+	c.JSON(http.StatusAccepted, gin.H{"success": true, "verified": result.Verified})
 }
 
 // Verify Email Handler Link

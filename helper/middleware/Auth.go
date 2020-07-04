@@ -48,5 +48,8 @@ func CheckAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
+		c.Set("UserId", claims.Id)
+		c.Next()
 	}
 }

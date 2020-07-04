@@ -7,5 +7,7 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/jinzhu/gorm v1.9.14
-	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
+	github.com/mailgun/mailgun-go/v4 v4.1.3
+	github.com/pkg/errors v0.9.1 // indirect
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 )

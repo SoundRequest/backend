@@ -6,7 +6,7 @@ import (
 
 // User Database structure
 type User struct {
-	ID                int64  `gorm:"not null;AUTO_INCREMENT;unique_index;NOT NULL"`
+	ID                int    `gorm:"not null;AUTO_INCREMENT;unique_index;NOT NULL"`
 	Name              string `gorm:"type:varchar(50);unique_index;NOT NULL"`
 	Password          string `gorm:"type:varchar(70);unique_index;NOT NULL"`
 	Email             string `gorm:"type:varchar(60);unique_index;NOT NULL"`

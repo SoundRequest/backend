@@ -34,7 +34,7 @@ func initAndRunServer(runPort string, runMode string) {
 	rand.Seed(time.Now().Unix())
 	gin.SetMode(runMode)
 	r := gin.Default()
-	r.LoadHTMLGlob("templates/*")
+	r.LoadHTMLGlob("templates/verify.html")
 	routes.Auth(r)
 	r.Run(":" + runPort) // listen and serve on 0.0.0.0:9096 (for windows "localhost:9096")
 }
