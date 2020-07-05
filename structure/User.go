@@ -12,5 +12,6 @@ type User struct {
 	Email             string `gorm:"type:varchar(60);unique_index;NOT NULL"`
 	Verified          bool   `gorm:"NOT NULL;defualt:default:0"`
 	VerifyCode        string `gorm:"type:varchar(10);unique_index;NOT NULL"`
+	VerifyCodePassword        string `gorm:"type:varchar(10);unique_index"`
 	LastPurchasedDate *time.Time
 }

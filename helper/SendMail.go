@@ -3,20 +3,33 @@ package helper
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"strings"
 	"time"
 
 	"github.com/mailgun/mailgun-go/v4"
 )
 
 // SendVefiryMail send mail with verify link
-func SendVefiryMail(link, mail string) error {
+func SendVefiryMail(verifyCode, mail string) error {
+
+	_mailHTML, errLoadMailHTML := ioutil.ReadFile("templates/mail/sendverify.html")
+	if errLoadMailHTML != nil {
+		log.Println(errLoadMailHTML)
+	}
+	mailHTML := string(_mailHTML)
+	mailHTML = strings.Replace(mailHTML, "${verifyCode}", verifyCode, -1)
+	mailHTML = strings.Replace(mailHTML, "${verifyCodeLink}", "http://localhost:9096/auth/verify/"+verifyCode, -1)
+
 	domain := Config().MailDomain
 	mg := mailgun.NewMailgun(domain, Config().MailAPIKey)
 	sender := "no-reply@" + domain
 	subject := "SoundRequest 인증메일"
-	body := "이메일주소를 인증하여 서비스를 이용하실 수 있습니다.\n본인이 아니라면 메일을 무시하셔도 좋습니다.\n인증링크: " + link
+	body := ""
 
 	message := mg.NewMessage(sender, subject, body, mail)
+	message.SetHtml(mailHTML)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()

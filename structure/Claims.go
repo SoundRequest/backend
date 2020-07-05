@@ -4,6 +4,6 @@ import "github.com/dgrijalva/jwt-go"
 
 // Claims for jwt
 type Claims struct {
-	Id int
+	ID int
 	jwt.StandardClaims
 }

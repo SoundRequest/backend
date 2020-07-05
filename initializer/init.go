@@ -45,7 +45,7 @@ func initDB() {
 	if errLoadConfig != nil {
 		log.Fatal(errLoadConfig)
 	}
-	connectionInfo := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True", config.Username, config.Password, config.Host, config.Port, config.Schema)
+	connectionInfo := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True", config.Username, config.Password, config.Host, config.Port, config.Schema)
 	dbConnection, errInitDB := db.InitDB(config.DBType, connectionInfo)
 	if errInitDB != nil {
 		log.Fatal(errInitDB)

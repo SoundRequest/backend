@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"math/rand"
 	"strings"
 
@@ -49,7 +48,6 @@ func CreateUser(email, name, password string) error {
 	verifyCode := b.String()
 
 	hashedPassword := helper.HashAndSalt([]byte(password))
-	fmt.Println(hashedPassword)
 	result := DB().Create(&structure.User{Name: name, Email: email, Password: hashedPassword, VerifyCode: verifyCode})
 	if result.Error != nil {
 		return result.Error
@@ -75,4 +73,13 @@ func CheckVerify(code string) (bool, error) {
 		return false, _result.Error
 	}
 	return true, nil
+}
+
+// UpdatePassword updates user's password
+func UpdatePassword(name, password string) error {
+	result := DB().Model(&structure.User{}).Where("name = ?", name).Update("password", helper.HashAndSalt([]byte(password)))
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }

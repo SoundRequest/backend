@@ -13,7 +13,7 @@ func GetJwtToken(id int) (string, error) {
 	expirationTime := time.Now().Add(time.Hour)
 
 	claims := &structure.Claims{
-		Id: id,
+		ID: id,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
