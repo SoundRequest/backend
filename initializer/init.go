@@ -44,16 +44,17 @@ func initDB() {
 	config, errLoadConfig := helper.LoadConfig("./config.json")
 	if errLoadConfig != nil {
 		log.Fatal(errLoadConfig)
+		return
 	}
 	connectionInfo := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True", config.Username, config.Password, config.Host, config.Port, config.Schema)
 	dbConnection, errInitDB := db.InitDB(config.DBType, connectionInfo)
 	if errInitDB != nil {
 		log.Fatal(errInitDB)
+		return
 	}
 
 	fmt.Println("Performing AutoMigrate...")
 	var models = []interface{}{&structure.User{}}
 	dbConnection.AutoMigrate(models...)
 	fmt.Println("Successfully performed AutoMigrate")
-
 }

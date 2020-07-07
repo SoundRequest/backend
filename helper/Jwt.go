@@ -20,10 +20,10 @@ func GetJwtToken(id int) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte(Config().JwtSecret))
+	tokenString, errStringToSignedString := token.SignedString([]byte(Config().JwtSecret))
 
-	if err != nil {
-		fmt.Println(err)
+	if errStringToSignedString != nil {
+		fmt.Println(errStringToSignedString)
 		return "", fmt.Errorf("token signed Error")
 	}
 	return tokenString, nil

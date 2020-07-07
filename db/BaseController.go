@@ -13,13 +13,13 @@ var dbConnection *gorm.DB
 
 // InitDB DataBase Connection
 func InitDB(dbtype string, connectionInfo string) (*gorm.DB, error) {
-	var err error
-	dbConnection, err = gorm.Open(dbtype, connectionInfo)
+	var errFailedToOpenDBConnection error
+	dbConnection, errFailedToOpenDBConnection = gorm.Open(dbtype, connectionInfo)
 
 	fmt.Println("Successed To Connect Database")
 	fmt.Println("Connection To " + connectionInfo)
 
-	return dbConnection, err
+	return dbConnection, errFailedToOpenDBConnection
 }
 
 // DB returns Database Connection

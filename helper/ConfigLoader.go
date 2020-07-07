@@ -12,15 +12,15 @@ var configLocal *structure.Config
 
 // LoadConfig requires config path. returns DB Configuration and error
 func LoadConfig(configPath string) (structure.Config, error) {
-	jsonFile, err := ioutil.ReadFile(configPath)
-	if err != nil {
-		fmt.Println(err)
+	jsonFile, errFailedToReadConfig := ioutil.ReadFile(configPath)
+	if errFailedToReadConfig != nil {
+		fmt.Println(errFailedToReadConfig)
 	}
 	fmt.Println("Successfully Opened config.json")
 	var config structure.Config
-	err = json.Unmarshal(jsonFile, &config)
+	errFailedToReadConfig = json.Unmarshal(jsonFile, &config)
 	configLocal = &config
-	return config, err
+	return config, errFailedToReadConfig
 }
 
 // Config from json

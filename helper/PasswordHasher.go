@@ -15,13 +15,12 @@ func HashAndSalt(pwd []byte) string {
 	return string(hash)
 }
 
-// CheckPassowrd check password
-func CheckPassowrd(normal, hashed string) bool {
-
+// CheckPassword check password
+func CheckPassword(normal, hashed string) bool {
 	verifyHash := []byte(hashed)
-	err := bcrypt.CompareHashAndPassword(verifyHash, []byte(normal))
-	if err != nil {
-		log.Println(err)
+	errFailedToCompareHAshAndPassword := bcrypt.CompareHashAndPassword(verifyHash, []byte(normal))
+	if errFailedToCompareHAshAndPassword != nil {
+		log.Println(errFailedToCompareHAshAndPassword)
 		return false
 	}
 	return true

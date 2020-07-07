@@ -34,7 +34,7 @@ func SendVefiryMail(verifyCode, mail string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	a, b, err := mg.Send(ctx, message)
+	a, b, errSendMail := mg.Send(ctx, message)
 	fmt.Println(a + "     " + b)
-	return err
+	return errSendMail
 }

@@ -17,3 +17,4 @@ config.json
 .DS_Store
 CompileDaemon
 backend
+.idea/

@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// SignIn controlls Sign In
+// SignIn controls Sign In
 func SignIn(c *gin.Context) {
 	var body structure.SignIn
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -31,7 +31,7 @@ func SignIn(c *gin.Context) {
 		})
 		return
 	}
-	if result := helper.CheckPassowrd(body.Password, result.Password); result == false {
+	if result := helper.CheckPassword(body.Password, result.Password); result == false {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Password NotMatch",
 		})
@@ -61,24 +61,24 @@ func SignUp(c *gin.Context) {
 	}
 
 	if err := db.CreateUser(body.Email, body.Name, body.Password); err != nil {
-		c.JSON(http.StatusConflict, gin.H{"message": "해당 이메일주소는 이미 가입되어 있습니다."})
+		c.JSON(http.StatusConflict, gin.H{"message": "해당 이메일 주소는 이미 가입되어 있습니다."})
 		return
 	}
 
-	result, err := db.FindUser(body.Name)
-	if err == db.ErrUserNotFound {
+	result, errUserNotFound := db.FindUser(body.Name)
+	if errUserNotFound == db.ErrUserNotFound {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"message": "UserNotFound",
 		})
 		return
 	}
 
-	token, err := helper.GetJwtToken(result.ID)
-	if err := helper.SendVefiryMail(result.VerifyCode, body.Email); err != nil {
+	token, errGetJwtToken := helper.GetJwtToken(result.ID)
+	if errSendVerifyMail := helper.SendVefiryMail(result.VerifyCode, body.Email); errSendVerifyMail != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{})
 		return
 	}
-	if err != nil {
+	if errGetJwtToken != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{})
 		return
 	}
@@ -91,8 +91,8 @@ func SignUp(c *gin.Context) {
 // Status of JWT TOKEN
 func Status(c *gin.Context) {
 	id, _ := c.Get("UserId")
-	result, err := db.FindUserByID(id.(int))
-	if err != nil {
+	result, errUserNotFound := db.FindUserByID(id.(int))
+	if errUserNotFound != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Server Error",
 		})
@@ -104,12 +104,12 @@ func Status(c *gin.Context) {
 // Verify Email Handler Link
 func Verify(c *gin.Context) {
 	code := c.Param("code")
-	check, err := db.CheckVerify(code)
-	if err == db.ErrUserAlreadyVerified {
+	check, errCheckVerify := db.CheckVerify(code)
+	if errCheckVerify == db.ErrUserAlreadyVerified {
 		c.HTML(http.StatusOK, "verify.html", gin.H{"text": "이미 인증된 계정입니다.", "success": false})
 		return
 	}
-	if err != nil {
+	if errCheckVerify != nil {
 		c.HTML(http.StatusOK, "verify.html", gin.H{"text": "서비스 처리중 에러가 발생하였습니다", "success": false})
 		return
 	}
@@ -124,28 +124,28 @@ func Verify(c *gin.Context) {
 // UpdatePassword Controller
 func UpdatePassword(c *gin.Context) {
 	var body structure.UpdatePassword
-	if err := c.ShouldBindJSON(&body); err != nil {
+	if errBindJSON := c.ShouldBindJSON(&body); errBindJSON != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Bad Request",
 		})
 		return
 	}
 
-	result, err := db.FindUser(body.Name)
-	if err == db.ErrUserNotFound {
+	result, errUserNotFound := db.FindUser(body.Name)
+	if errUserNotFound == db.ErrUserNotFound {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"message": "UserNotFound",
 		})
 		return
 	}
-	if err != nil {
+	if errUserNotFound != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Server Error",
 		})
 		return
 	}
 
-	if result := helper.CheckPassowrd(body.Origin, result.Password); result == false {
+	if result := helper.CheckPassword(body.Origin, result.Password); result == false {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Origin Password NotMatch",
 		})
