@@ -8,13 +8,13 @@ import (
 	"time"
 
 	"github.com/SoundRequest/backend/db"
-	// _ "github.com/SoundRequest/backend/docs"
+	"github.com/SoundRequest/backend/docs"
 	"github.com/SoundRequest/backend/helper"
 	"github.com/SoundRequest/backend/routes"
 	"github.com/SoundRequest/backend/structure"
 	"github.com/gin-gonic/gin"
-	// ginSwagger "github.com/swaggo/gin-swagger"
-	// swaggerFiles "github.com/swaggo/gin-swagger/swaggerFiles"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	swaggerFiles "github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 // InitAndCheckArgs check args
@@ -38,8 +38,18 @@ func initAndRunServer(runPort string, runMode string) {
 	gin.SetMode(runMode)
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/verify.html")
+
+	// Set Router
 	routes.Auth(r)
-	//r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	routes.Play(r)
+
+	// Set Swagger Docs
+	docs.SwaggerInfo.Title = "Sound Request"
+	docs.SwaggerInfo.Description = "SoundRequest API Docs. \nHomepage: https://soundrequest.xyz\ngithub: https://github.com/SoundRequest/backend"
+	docs.SwaggerInfo.Version = "0.1"
+	docs.SwaggerInfo.Host = "api.soundrequest.xyz"
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	r.Run(":" + runPort) // listen and serve on 0.0.0.0:9096 (for windows "localhost:9096")
 }
 
@@ -58,7 +68,7 @@ func initDB() {
 	}
 
 	fmt.Println("Performing AutoMigrate...")
-	var models = []interface{}{&structure.User{}}
+	var models = []interface{}{&structure.User{}, &structure.PlayItem{}, &structure.PlayList{}, &structure.PlayTag{}, &structure.PlayBridge{}}
 	dbConnection.AutoMigrate(models...)
 	fmt.Println("Successfully performed AutoMigrate")
 }

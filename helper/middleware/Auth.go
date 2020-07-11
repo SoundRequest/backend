@@ -14,6 +14,7 @@ import (
 // CheckAuth handles authentication information
 func CheckAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// Parsing Token From Header
 		clientToken := c.GetHeader("Authorization")
 		if clientToken == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{"message": "Authorization Token is required"})
@@ -32,11 +33,13 @@ func CheckAuth() gin.HandlerFunc {
 			return
 		}
 
+		// Parsing JWT To struct
 		claims := &structure.Claims{}
 		_, errParseWithClaims := jwt.ParseWithClaims(clientToken, claims, func(token *jwt.Token) (interface{}, error) {
 			return []byte(helper.Config().JwtSecret), nil
 		})
 
+		// Check Correct OR Has Error
 		if errParseWithClaims != nil {
 			log.Println(errParseWithClaims)
 			if errParseWithClaims.Error() == jwt.ErrSignatureInvalid.Error() {

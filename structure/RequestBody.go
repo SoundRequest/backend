@@ -30,3 +30,4 @@ type PasswordWithCode struct {
 	Code string `json:"code" binding:"required"`
 	New  string `json:"new" binding:"required"`
 }
+
