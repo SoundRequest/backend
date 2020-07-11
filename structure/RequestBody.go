@@ -19,3 +19,14 @@ type UpdatePassword struct {
 	Origin string `json:"origin" binding:"required"`
 	New    string `json:"new" binding:"required"`
 }
+
+// SendVerifyPasswordCode handles db for verifypasswordcode event
+type SendVerifyPasswordCode struct {
+	Email string `json:"email" binding:"required"`
+}
+
+// PasswordWithCode handles db for verifypasswordcode event
+type PasswordWithCode struct {
+	Code string `json:"code" binding:"required"`
+	New  string `json:"new" binding:"required"`
+}

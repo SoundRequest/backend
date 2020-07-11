@@ -18,3 +18,8 @@ config.json
 CompileDaemon
 backend
 .idea/
+templates/mail/verifypassword.html
+templates/mail/sendverify.html
+templates/mail/*.ico
+
+docs

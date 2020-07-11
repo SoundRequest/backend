@@ -49,7 +49,7 @@ func CheckAuth() gin.HandlerFunc {
 			return
 		}
 
-		c.Set("UserId", claims.Id)
+		c.Set("UserId", claims.ID)
 		c.Next()
 	}
 }

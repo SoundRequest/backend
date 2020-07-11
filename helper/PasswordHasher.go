@@ -7,7 +7,8 @@ import (
 )
 
 // HashAndSalt password
-func HashAndSalt(pwd []byte) string {
+func HashAndSalt(origin string) string {
+	pwd := []byte(origin)
 	hash, hashAndSaltErr := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
 	if hashAndSaltErr != nil {
 		log.Println(hashAndSaltErr)

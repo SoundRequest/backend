@@ -9,11 +9,12 @@ import (
 // Auth Manage
 func Auth(route *gin.Engine) {
 	auth := route.Group("/auth")
-	auth.GET("/status", middleware.CheckAuth(), controller.Status)
-	auth.POST("/signin", controller.SignIn)
-	auth.POST("/signup", controller.SignUp)
-	auth.POST("/updatepassword", controller.UpdatePassword)
-	auth.POST("/recoverPasswordVerifyCode", controller.RecoverPasswordVerifyCode)
-	auth.POST("/recoverpassword", controller.RecoverPassword)
-	auth.GET("/verify/:code", controller.Verify)
+	c := controller.NewAuth()
+	auth.GET("/status", middleware.CheckAuth(), c.Status)
+	auth.POST("/signin", c.SignIn)
+	auth.POST("/signup", c.SignUp)
+	auth.POST("/updatepassword", c.UpdatePassword)
+	auth.POST("/recoverPasswordVerifyCode", c.RecoverPasswordVerifyCode)
+	auth.POST("/recoverpassword", c.RecoverPassword)
+	auth.GET("/verify/:code", c.Verify)
 }
