@@ -10,7 +10,7 @@ import (
 
 // GetJwtToken with id
 func GetJwtToken(id int) (string, error) {
-	expirationTime := time.Now().Add(time.Hour)
+	expirationTime := time.Now().Add(time.Hour * 24 * 14)
 
 	claims := &structure.Claims{
 		ID: id,

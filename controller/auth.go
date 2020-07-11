@@ -5,7 +5,7 @@ import (
 
 	"github.com/SoundRequest/backend/db"
 	"github.com/SoundRequest/backend/helper"
-	"github.com/SoundRequest/backend/structure"
+	"github.com/SoundRequest/backend/structure/request"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +18,7 @@ func NewAuth() *Auth {
 
 // SignIn controls Sign In
 func (a *Auth) SignIn(c *gin.Context) {
-	var body structure.SignIn
+	var body request.SignIn
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Bad Request",
@@ -59,7 +59,7 @@ func (a *Auth) SignIn(c *gin.Context) {
 
 // SignUp controller
 func (a *Auth) SignUp(c *gin.Context) {
-	var body structure.SignUp
+	var body request.SignUp
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Bad Request",
@@ -134,7 +134,7 @@ func (a *Auth) Verify(c *gin.Context) {
 
 // UpdatePassword Controller
 func (a *Auth) UpdatePassword(c *gin.Context) {
-	var body structure.UpdatePassword
+	var body request.UpdatePassword
 	if errBindJSON := c.ShouldBindJSON(&body); errBindJSON != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Bad Request",
@@ -178,7 +178,7 @@ func (a *Auth) UpdatePassword(c *gin.Context) {
 
 // RecoverPasswordVerifyCode send verify code to email
 func (a *Auth) RecoverPasswordVerifyCode(c *gin.Context) {
-	var body structure.SendVerifyPasswordCode
+	var body request.SendVerifyPasswordCode
 	if errBindJSON := c.ShouldBindJSON(&body); errBindJSON != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Bad Request",
@@ -202,7 +202,7 @@ func (a *Auth) RecoverPasswordVerifyCode(c *gin.Context) {
 
 // RecoverPassword With VerifyCode
 func (a *Auth) RecoverPassword(c *gin.Context) {
-	var body structure.PasswordWithCode
+	var body request.PasswordWithCode
 	if errBindJSON := c.ShouldBindJSON(&body); errBindJSON != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Bad Request",
