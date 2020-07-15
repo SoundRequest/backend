@@ -9,15 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Auth struct {
-}
-
-func NewAuth() *Auth {
-	return &Auth{}
-}
-
 // SignIn controls Sign In
-func (a *Auth) SignIn(c *gin.Context) {
+func SignIn(c *gin.Context) {
 	var body request.SignIn
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -58,7 +51,7 @@ func (a *Auth) SignIn(c *gin.Context) {
 }
 
 // SignUp controller
-func (a *Auth) SignUp(c *gin.Context) {
+func SignUp(c *gin.Context) {
 	var body request.SignUp
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -72,7 +65,7 @@ func (a *Auth) SignUp(c *gin.Context) {
 		return
 	}
 
-	result, errUserNotFound := db.FindUser(body.Name)
+	result, errUserNotFound := db.FindUser(body.Email)
 	if errUserNotFound == db.ErrUserNotFound {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"message": "UserNotFound",
@@ -100,7 +93,7 @@ func (a *Auth) SignUp(c *gin.Context) {
 }
 
 // Status of JWT TOKEN
-func (a *Auth) Status(c *gin.Context) {
+func Status(c *gin.Context) {
 	id, _ := c.MustGet("UserId").(int)
 	result, errUserNotFound := db.FindUserByID(id)
 	if errUserNotFound != nil {
@@ -113,7 +106,7 @@ func (a *Auth) Status(c *gin.Context) {
 }
 
 // Verify Email Handler Link
-func (a *Auth) Verify(c *gin.Context) {
+func Verify(c *gin.Context) {
 	code := c.Param("code")
 	check, errCheckVerify := db.CheckVerify(code)
 	if errCheckVerify == db.ErrUserAlreadyVerified {
@@ -133,7 +126,7 @@ func (a *Auth) Verify(c *gin.Context) {
 }
 
 // UpdatePassword Controller
-func (a *Auth) UpdatePassword(c *gin.Context) {
+func UpdatePassword(c *gin.Context) {
 	var body request.UpdatePassword
 	if errBindJSON := c.ShouldBindJSON(&body); errBindJSON != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -177,7 +170,7 @@ func (a *Auth) UpdatePassword(c *gin.Context) {
 }
 
 // RecoverPasswordVerifyCode send verify code to email
-func (a *Auth) RecoverPasswordVerifyCode(c *gin.Context) {
+func RecoverPasswordVerifyCode(c *gin.Context) {
 	var body request.SendVerifyPasswordCode
 	if errBindJSON := c.ShouldBindJSON(&body); errBindJSON != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -201,7 +194,7 @@ func (a *Auth) RecoverPasswordVerifyCode(c *gin.Context) {
 }
 
 // RecoverPassword With VerifyCode
-func (a *Auth) RecoverPassword(c *gin.Context) {
+func RecoverPassword(c *gin.Context) {
 	var body request.PasswordWithCode
 	if errBindJSON := c.ShouldBindJSON(&body); errBindJSON != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -225,4 +218,16 @@ func (a *Auth) RecoverPassword(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Successed to Change",
 	})
+}
+
+func Profile(c *gin.Context) {
+	id, _ := c.MustGet("UserId").(int)
+	result, errUserNotFound := db.FindUserByID(id)
+	if errUserNotFound != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Server Error",
+		})
+		return
+	}
+	c.JSON(http.StatusAccepted, gin.H{"id": id, "verified": result.Verified, "email": result.Email, "name": result.Name})
 }

@@ -1,6 +1,8 @@
 package db
 
 import (
+	"strings"
+
 	"github.com/SoundRequest/backend/helper"
 	"github.com/SoundRequest/backend/structure"
 	"github.com/jinzhu/gorm"
@@ -18,10 +20,11 @@ func FindUserByID(id int) (*structure.User, error) {
 	return data, nil
 }
 
-// FindUser With Name Or Email
-func FindUser(name string) (*structure.User, error) {
+// FindUser With Email
+func FindUser(email string) (*structure.User, error) {
 	data := &structure.User{}
-	result := DB().Where("name = ? OR email = ?", name, name).First(&data)
+	loweremail := strings.ToLower(email)
+	result := DB().Where("email = ?", loweremail).First(&data)
 	if result.Error == gorm.ErrRecordNotFound {
 		return nil, ErrUserNotFound
 	} else if result.Error != nil {

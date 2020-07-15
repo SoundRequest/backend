@@ -20,7 +20,7 @@ func SendVefiryMail(verifyCode, mail string) error {
 	}
 	mailHTML := string(_mailHTML)
 	mailHTML = strings.Replace(mailHTML, "${verifyCode}", verifyCode, -1)
-	mailHTML = strings.Replace(mailHTML, "${verifyCodeLink}", "http://localhost:9096/auth/verify/"+verifyCode, -1)
+	mailHTML = strings.Replace(mailHTML, "${verifyCodeLink}", "https://api.soundrequest.xyz/auth/verify/"+verifyCode, -1)
 
 	domain := Config().MailDomain
 	mg := mailgun.NewMailgun(domain, Config().MailAPIKey)

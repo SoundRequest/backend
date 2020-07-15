@@ -7,4 +7,6 @@ var (
 	ErrUserAlreadyVerified = errors.New("User already verified")
 	// ErrUserNotFound returns error
 	ErrUserNotFound = errors.New("Cannot Find User")
+	// ErrItemNotFound returns error
+	ErrItemNotFound = errors.New("Cannot Find Item")
 )

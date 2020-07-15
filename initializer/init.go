@@ -10,6 +10,7 @@ import (
 	"github.com/SoundRequest/backend/db"
 	"github.com/SoundRequest/backend/docs"
 	"github.com/SoundRequest/backend/helper"
+	"github.com/SoundRequest/backend/helper/middleware"
 	"github.com/SoundRequest/backend/routes"
 	"github.com/SoundRequest/backend/structure"
 	"github.com/gin-gonic/gin"
@@ -38,6 +39,8 @@ func initAndRunServer(runPort string, runMode string) {
 	gin.SetMode(runMode)
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/verify.html")
+
+	r.Use(middleware.Cors())
 
 	// Set Router
 	routes.Auth(r)
