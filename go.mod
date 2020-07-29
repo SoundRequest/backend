@@ -3,6 +3,7 @@ module github.com/SoundRequest/backend
 go 1.14
 
 require (
+	github.com/PuerkitoBio/goquery v1.5.1
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible

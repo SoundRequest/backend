@@ -45,6 +45,7 @@ func initAndRunServer(runPort string, runMode string) {
 	// Set Router
 	routes.Auth(r)
 	routes.Play(r)
+	routes.Chart(r)
 
 	// Set Swagger Docs
 	docs.SwaggerInfo.Title = "Sound Request"
